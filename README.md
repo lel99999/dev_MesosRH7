@@ -18,3 +18,4 @@ $sudo yum -y install mesos marathon
 #### Install Zookeeper on Master Nodes
 `$sudo yum -y install mesosphere-zookeeper`<br/>
 
+#### Configure Zookeeper and Mesos Masters on Master Nodes
