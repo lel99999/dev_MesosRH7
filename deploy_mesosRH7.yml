@@ -36,6 +36,19 @@
 #       state: present
 #     shell:  yum groupinstall "Development Tools" -y
 
+    - name: Download software
+      yum:
+        name: http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+        state: present
+
+    - name: Install Mesos & Marathon (all nodes)
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_item:
+        - mesos
+        - marathon 
+
   roles:
     - chromeRH7
 #   - emacsRH7
