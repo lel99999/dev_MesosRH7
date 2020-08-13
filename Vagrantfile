@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
 #   trigger.info = "Trigger Execution ..."
 #   trigger.run = { path:"subscription-manager register --username <username> --password <password> --auto-attach"}
 # end
-  config.vm.define "mesosRH7" do |chromeRH7|
+  config.vm.define "mesosRH7" do |mesosRH7|
     mesosRH7.vm.box = "clouddood/RH7.5_baserepo"
     mesosRH7.vm.hostname = "emacsRH7"
     mesosRH7.vm.network "private_network", ip: "192.168.60.167"
@@ -82,7 +82,7 @@ Vagrant.configure("2") do |config|
     mesosRH7.vm.provision "main", type: "ansible" do |ansible|
       ansible.playbook = "deploy_mesosRH7_DEV.local.yml"
 #     ansible.playbook = "deploy_mesosRH7_DEV.local.yml"
-#     ansible.playbook = "deploy_chromeTestRH7.yml"
+#     ansible.playbook = "deploy_mesosTestRH7.yml"
       ansible.inventory_path = "vagrant_hosts"
       #ansible.tags = ansible_tags
       #ansible.verbose = ansible_verbosity
@@ -91,8 +91,8 @@ Vagrant.configure("2") do |config|
     end
     # Update
 #   mesosRH7.vm.provision "update", type: "ansible" do |ansible|
-#     ansible.playbook = "deploy_emacsPatchRH7_DEV.local.yml"
-#     ansible.playbook = "deploy_emacsTestRH7.yml"
+#     ansible.playbook = "deploy_mesosPatchRH7_DEV.local.yml"
+#     ansible.playbook = "deploy_mesosTestRH7.yml"
 #     ansible.inventory_path = "vagrant_hosts"
 #     #ansible.tags = ansible_tags
 #     #ansible.verbose = ansible_verbosity
