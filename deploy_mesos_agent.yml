@@ -1,0 +1,97 @@
+# deploy_mesos_client.yml
+### The Mesos agent comes with everything included in a GoCD agent and the App Server
+---
+- hosts: mesos_agent
+  become: yes
+  serial: 1
+  pre_tasks:
+    - name: Install additional packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "@Development Tools"
+        - screen
+        - libselinux-python
+
+  ## Temporarily remove devtools and r due to limited repositories on agents
+  roles:
+    - {role: common, when: "install_glusterfs"}
+    - {role: iptables, when: "iptables_config"}
+    #- devtools
+    - mesos_agent
+    - {role: epel, when: "use_epel"}
+    - jdk
+    - postgresql-client
+    - apache
+    #- pentaho
+    - gocd
+    - nginx
+    - {role: python, when: "custom_repo"}
+    - {role: python-build, when: "not custom_repo"}
+    - python3
+    - python-libs
+    - odbc
+    - jdbc
+    - {role: ruby, when: "install_ruby"}
+    - sqitch
+    - r-core
+    - r-libs
+    - r-shiny
+    - nodejs
+    - redis
+    #- julia
+
+  post_tasks:
+
+    - name: Stop Shiny Server
+      service:
+        name: shiny-server
+        state: stopped
+      ignore_errors: yes
+
+    - name: Turn off Shiny Server
+      service:
+        name: shiny-server
+        enabled: no
+      ignore_errors: yes
+
+    - name: Turn off GoCD Agent
+      service:
+        name: go-agent
+        state: stopped
+        enabled: no
+
+    - name: Install custom RPMs
+      yum:
+        name: "{{ item }}"
+        state: present
+        disable_gpg_check: yes
+      with_items:
+        - xsv
+        - gnucobol
+        - htop
+        - p7zip
+      when: custom_repo
+
+    - name: Install Additional Database Automation packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - htop
+        - rsync
+        - unzip
+        - gpg
+        - pigz
+        # - facter
+        - sysstat # sar, iostat, vmstat
+        - systemtap # dtrace equivalent
+        - ant
+
+    - name: Install Database Automation custom packages
+      yum:
+        name: "{{ item }}"
+        state: "{{ db_automation_package_state }}"
+        disable_gpg_check: yes
+      with_items: "{{ db_automation_custom_packages }}"
