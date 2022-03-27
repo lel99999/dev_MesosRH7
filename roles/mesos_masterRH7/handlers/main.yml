@@ -6,7 +6,9 @@
     state: restarted
 
 - name: restart mesos-master
-  command: restart mesos-master
+  command: systemctl restart mesos-master
+# command: restart mesos-master
 
 - name: restart marathon
-  command: restart marathon
+  command: systemctl restart marathon
+# command: restart marathon
