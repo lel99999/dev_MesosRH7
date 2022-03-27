@@ -68,6 +68,16 @@
     - mesos
     - mesos-master
 
+- name: Install mesos dependencies
+  yum:
+#   name: ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/kalyaka/RHEL_7/x86_64/libevent2-devel-2.0.21-13.1.x86_64.rpm
+#   name: libevent2-devel
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libevent
+    - libevent-devel
+
 - name: Install mesos and supporting packages
   yum:
     name: "{{ item }}"
@@ -480,13 +490,19 @@
 # Ansible "service" command doesn't work with upstart jobs on Centos, so
 # do it manually
 - name: Stop the Mesos agent process
-  command: "stop mesos-slave"
+# command: "stop mesos-slave"
+  command: echo "stop mesos-slave"
   register: mesos_agent_stop
   failed_when: mesos_agent_stop.rc != 0 and 'Unknown instance' not in mesos_agent_stop.stderr
   changed_when: "'Unknown instance' not in mesos_agent_stop.stderr"
   tags:
     - mesos
     - mesos-master
+
+- name: Check if mesos-agent file exists
+  stat:
+    path: /etc/init/mesos-slave.conf
+  register: mesosslave_file
 
 - name: Disable the mesos-agent service
   lineinfile:
@@ -495,6 +511,7 @@
     line: "#\\2"
     backrefs: yes
     state: present
+  when: mesosslave_file.stat.exists == true
   tags:
     - mesos
     - mesos-master
@@ -511,7 +528,8 @@
     - mesos-master
 
 - name: Start the Mesos master and Marathon processes (they are already enabled)
-  command: "start {{ item }}"
+  command: "systemctl start {{ item }}"
+# command: "start {{ item }}"
   with_items:
     - mesos-master
     - marathon
@@ -552,6 +570,8 @@
     - mesos-master
 
 - name: Set recursive admin permissions on log folders
+  vars:
+  - restricted_group_name: vagrant
   acl:
     path: "{{ item }}"
     entity: "{{ restricted_group_name }}"
@@ -562,6 +582,8 @@
   with_items: "{{ mesos_master_log_file_locations }}"
 
 - name: Set default admin permissions on log folders
+  vars:
+  - restricted_group_name: vagrant
   acl:
     path: "{{ item }}"
     entity: "{{ restricted_group_name }}"
