@@ -1,0 +1,33 @@
+# deploy_mesos_master.yml
+---
+- hosts: mesos_master
+  vars:
+  - mesos_upgrade: false
+  - marathon_upgrade: false
+# - iptables_config: false
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Shutdown all but one of the Mesos Master instances
+      service:
+        name: mesos-master
+        state: stopped
+      when: mesos_upgrade and 'mesos_master' in groups and inventory_hostname != groups['mesos_master'][0]
+
+    - name: Shutdown all but one of the Marathon instances
+      service:
+        name: marathon
+        state: stopped
+      when: marathon_upgrade and 'mesos_master' in groups and inventory_hostname != groups['mesos_master'][0]
+
+- hosts: mesos_master
+  vars:
+  - iptables_config: false
+  become: yes
+  become_method: sudo
+  serial: 1
+  max_fail_percentage: 30
+  roles:
+    - {role: iptables, when: "iptables_config"}
+    - common7
+    - mesos_masterRH7
