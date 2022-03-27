@@ -1,6 +1,12 @@
 # dev_MesosRH7
 Mesos on RHEL 7.x
 
+#### Mesos, Marathon Updated Versions
+  - mesos-0:1.11.0-2.0.1.el7.x86_64  <br/>
+# - mesos-0:1.4.1-2.0.1.x86_6  <br/>4
+  - marathon-0:1.4.13-1.0.683.el7.x86_64 <br/>
+# - marathon-0:1.4.9-1.0.668.el6.x86_64  <br/>
+
 #### Create VMs
 >-VirtualBox (2 Cores, 2Gb RAM, 100GB Storage, 2 NICs)<br/>
 >-Base Install RHEL7.x (Infrastructure Server)<br/>
