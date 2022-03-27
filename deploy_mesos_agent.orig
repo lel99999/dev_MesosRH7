@@ -47,7 +47,7 @@
     - {role: common7, when: "install_glusterfs"}
     - {role: iptables, when: "iptables_config"}
     #- devtools
-    - mesos_agentRH7
+    - mesos_agent
     - {role: epel7, when: "use_epel"}
     - openjdk1.8
 ##  - jdk
