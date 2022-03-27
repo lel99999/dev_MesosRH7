@@ -1,0 +1,118 @@
+# main.yml
+---
+- name: Add mpapis public key
+  shell: "curl -sSL https://rvm.io/mpapis.asc | gpg --import -"
+  tags:
+    - ruby
+
+- name: Remove any RPM installed Ruby
+  yum:
+    name: ruby
+    state: absent
+  tags:
+    - ruby
+
+- name: Get script file
+  get_url:
+    url: https://raw.githubusercontent.com/wayneeseguin/rvm/stable/binscripts/rvm-installer
+    dest: /tmp/rvm-installer.sh
+    force: yes
+  tags:
+    - ruby
+
+- name: Configure rvm-installer
+  file:
+    dest: /tmp/rvm-installer.sh
+    mode: 0755
+  tags:
+    - ruby
+
+- name: Install RVM and stable Ruby
+  command: "/tmp/rvm-installer.sh stable --ruby"
+  register: install_rvm_ruby
+  changed_when: '"Already installed" not in install_rvm_ruby.stderr or "Upgrading" in install_rvm_ruby.stdout'
+  when: install_ruby
+  tags:
+    - ruby
+
+- name: Ensure /etc/rvmrc is available
+  file:
+    dest: /etc/rvmrc
+    mode: 0664
+  when: install_ruby
+  tags:
+    - ruby
+
+- name: Determine if system-wide ruby is installed
+  stat:
+    path: "{{ item }}"
+  register: stat_result
+  with_items:
+    - /usr/bin/ruby
+    - /usr/bin/gem
+  when: install_ruby
+  tags:
+    - ruby
+
+- name: Create symlink for ruby to /usr/bin if not present
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/ruby
+    dest: /usr/bin/ruby
+  when: install_ruby and (not stat_result.results[0].stat.exists)
+  tags:
+    - ruby
+
+- name: Create symlink for ruby to /usr/local/bin otherwise
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/ruby
+    dest: /usr/local/bin/ruby
+  when: install_ruby and (not stat_result.results[0].stat.exists)
+  tags:
+    - ruby
+
+- name: Create symlink for gem to /usr/bin if not present
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/gem
+    dest: /usr/bin/gem
+  when: install_ruby and (not stat_result.results[1].stat.exists)
+  tags:
+    - ruby
+
+- name: Create symlink for gem to /usr/local/bin otherwise
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/gem
+    dest: /usr/local/bin/gem
+  when: install_ruby and (stat_result.results[1].stat.exists)
+  tags:
+    - ruby
+
+- name: Install bundler globally
+  gem:
+    name: bundler
+    state: present
+    user_install: no
+  when: install_ruby
+  tags:
+    - ruby
+
+- name: Create symlink for Bundler
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/bundle
+    dest: /usr/bin/bundle
+  when: install_ruby
+  tags:
+    - ruby
+
+- name: Create symlink for ruby_executable_hooks
+  file:
+    state: link
+    src: /usr/local/rvm/rubies/default/bin/ruby_executable_hooks
+    dest: /usr/bin/ruby_executable_hooks
+  when: install_ruby
+  tags:
+    - ruby
