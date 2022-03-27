@@ -4,7 +4,8 @@
 ### SETUP MESOS REPOSITORIES AND INSTALL
 
 - name: Add mesosphere repository
-  command: "rpm -Uvh http://repos.mesosphere.io/el/6/noarch/RPMS/mesosphere-el-repo-6-2.noarch.rpm"
+  command: "rpm -Uvh http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm"
+# command: "rpm -Uvh http://repos.mesosphere.io/el/6/noarch/RPMS/mesosphere-el-repo-6-2.noarch.rpm"
   args:
     creates: /etc/yum.repos.d/mesosphere.repo
   when: not 'production' in group_names
@@ -29,6 +30,16 @@
   tags:
     - mesos
     - mesos-agent
+
+- name: Install mesos dependencies
+  yum:
+#   name: ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/kalyaka/RHEL_7/x86_64/libevent2-devel-2.0.21-13.1.x86_64.rpm
+#   name: libevent2-devel
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libevent
+    - libevent-devel
 
 - name: Install mesos packages
   yum:
@@ -55,13 +66,19 @@
     - mesos-agent
 
 - name: Stop the Mesos master process
-  command: "stop mesos-master"
+  command: echo "stop mesos-master"
+# command: "systemctl stop mesos-master"
   register: mesos_master_stop
   failed_when: mesos_master_stop.rc != 0 and 'Unknown instance' not in mesos_master_stop.stderr
   changed_when: "'Unknown instance' not in mesos_master_stop.stderr"
   tags:
     - mesos
     - mesos-agent
+
+- name: Check if mesos-master file exists
+  stat:
+    path: /etc/init/mesos-master.conf
+  register: mesosmaster_file
 
 - name: Stop the mesos-master service
   lineinfile:
@@ -70,6 +87,7 @@
     line: "#\\2"
     backrefs: yes
     state: present
+  when: mesosmaster_file.stat.exists == true
   tags:
     - mesos
     - mesos-agent
@@ -255,7 +273,9 @@
     content: "{{ mesos_agent_image_backend }}"
   notify:
     - restart mesos-agent
-  when: mesos_agent_version | version_compare('1.2.0', '>=')
+  when: mesos_agent_version is version_compare('1.11.0-2.0.1', '>=')
+# when: mesos_agent_version | version_compare('1.11.0-2.0.1', '>=')
+# when: mesos_agent_version | version_compare('1.4.0', '>=')
   tags:
     - mesos
     - mesos-agent
@@ -266,7 +286,9 @@
     dest: /etc/mesos-slave/default_container_dns
   notify:
     - restart mesos-agent
-  when: mesos_agent_version | version_compare('1.4.0', '>=')
+  when: mesos_agent_version is version_compare('1.11.0-2.0.1', '>=')
+# when: mesos_agent_version | version_compare('1.11.0-2.0.1', '>=')
+# when: mesos_agent_version | version_compare('1.4.0', '>=')
   tags:
     - mesos
     - mesos-agent
@@ -277,7 +299,9 @@
     dest: /etc/mesos-slave/default_container_info
   notify:
     - restart mesos-agent
-  when: "{{ mesos_agent_version | version_compare('1.4.0', '>=') }}"
+  when: "{{ mesos_agent_version is version_compare('1.11.0', '>=') }}"
+# when: "{{ mesos_agent_version | version_compare('1.11.0', '>=') }}"
+# when: "{{ mesos_agent_version | version_compare('1.4.0', '>=') }}"
   tags:
     - mesos
     - mesos-agent
@@ -396,7 +420,7 @@
     - mesos-agent
 
 - name: Start the Mesos agent
-  command: "start mesos-slave"
+  command: "systemctl start mesos-slave"
   register: mesos_agent_start
   failed_when: mesos_agent_start.rc != 0 and 'Job is already running' not in mesos_agent_start.stderr
   changed_when: mesos_agent_start.rc != 0 and 'Job is already running' not in mesos_agent_start.stderr

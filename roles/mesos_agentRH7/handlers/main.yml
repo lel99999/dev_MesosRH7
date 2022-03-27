@@ -1,6 +1,7 @@
 ---
 - name: restart mesos-agent
-  command: restart mesos-slave
+  command: systemctl restart mesos-slave
+# command: restart mesos-slave
   tags:
     - mesos
     - mesos-agent
