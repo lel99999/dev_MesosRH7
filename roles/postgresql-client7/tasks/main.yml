@@ -47,7 +47,9 @@
   yum_repository:
     name: postgresql10.x
     description: postgresql 10.x repo
-    baseurl: https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/
+    baseurl: https://ftp.postgresql.org/pub/repos/yum/10/redhat/rhel-7.12-x86_64/
+#   baseurl: https://ftp.postgresql.org/pub/repos/yum/common/redhat/rhel-7-x86_64/pgdg-redhat-repo-42.0-24.noarch.rpm
+#   baseurl: https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/
     gpgcheck: no
 
 - name: Install postgres 10.x packages on RHEL 7
