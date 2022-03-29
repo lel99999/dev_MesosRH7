@@ -429,6 +429,8 @@
     - mesos-agent
 
 - name: Set recursive admin permissions on log folders
+  vars:
+  - restricted_group_name: vagrant
   acl:
     path: "{{ item }}"
     entity: "{{ restricted_group_name }}"
@@ -442,6 +444,8 @@
     - mesos-agent
 
 - name: Set default admin permissions on log folders
+  vars:
+  - restricted_group_name: vagrant
   acl:
     path: "{{ item }}"
     entity: "{{ restricted_group_name }}"
