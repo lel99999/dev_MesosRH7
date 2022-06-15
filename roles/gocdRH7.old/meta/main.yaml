@@ -1,12 +1,9 @@
 ---
 dependencies:
-# - {role: python, when: "install_python and custom_repo"}
+  - {role: python3, when: "install_python and custom_repo"}
 # - {role: python-build, when: "not custom_repo"}
-  - python3RH7
-# - role: postgresql-client7
-  - role: postgresql13-clientRH7
+  - role: postgresql-client7
   - role: openjdk1.8
-# - role: jdk
   - {role: epel7, when: "use_epel and not 'production' in group_names"}
   - role: odbc7
-  - role: jdbc7
+  - role: jdbc

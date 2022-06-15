@@ -1,15 +1,21 @@
 ---
-go_server_address: 10.0.1.26
+#go_server_address: 10.0.1.26
+go_server_address: 192.168.60.26
 go_server_port: 8153
-go_server_url: https://10.0.1.26:8153/go
+#go_server_url: https://10.0.1.26:8153/go
+go_server_url: https://192.168.60.26:8153/go
 #gocd_agent_package_url: https://download.gocd.io/binaries/17.10.0-5380/rpm/go-agent-17.10.0-5380.noarch.rpm
 #gocd_agent_package_name: go-agent-17.10.0-5380.noarch.rpm
 #gocd_agent_package_path: /tmp
 #gocd_agent_checksum: ce65027c2e3f3ec4768071758dd3ac8b2a846b90
-gocd_agent_package_url: https://download.gocd.org/binaries/21.4.0-13469/rpm/go-agent-21.4.0-13469.noarch.rpm 
-gocd_agent_package_name: go-agent-21.4.0-13469.noarch.rpm
+#gocd_agent_package_url: https://download.gocd.org/binaries/21.4.0-13469/rpm/go-agent-21.4.0-13469.noarch.rpm 
+gocd_agent_package_url: https://download.gocd.org/binaries/22.1.0-13913/rpm/go-agent-22.1.0-13913.noarch.rpm
+gocd_agent_package_name: go-agent-22.1.0-13913.noarch.rpm
 gocd_agent_package_path: /tmp
-gocd_agent_checksum: 3905dd7fc649cad870d79d2db0a79704ea669481ceecb1f0216df7c5a6f0205a
+#gocd_agent_checksum: 3905dd7fc649cad870d79d2db0a79704ea669481ceecb1f0216df7c5a6f0205a
+gocd_agent_checksum: bc8adaa015c2f313495b0321e123a5f5ad9d1ed3 #SHA1
+#gocd_agent_checksum: 45ab3a47b17d39b7a28291940ef80a479b87343f3134a5cf57637ee01f510992 #SHA256
+
 
 gocd_agent_work_dir: /var/lib/go-agent
 gocd_agent_mem: "128m"
