@@ -1,0 +1,85 @@
+---
+#postgres_repository_url: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-6-x86_64/pgdg-redhat10-10-2.noarch.rpm"
+postgres_repository_repo: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64"
+#postgres_repository_url: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm"
+#postgres94_repository_url: "https://download.postgresql.org/pub/repos/yum/9.4/redhat/rhel-7-x86_64/pgdg-redhat94-9.4-3.noarch.rpm"
+#postgres94_repository_url: "https://download.postgresql.org/pub/repos/yum/9.4/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.hnoarch.rpm"
+##postgres_repository_url: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+#postgres_repository_url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm" 
+postgres_repository_url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+postgres13_repository_url: "https://download.postgresql.org/pub/repos/yum/13/redhat/rhel-7.9-x86_64/postgresql13-13.7-1PGDG.rhel7.x86_64.rpm"
+#postgres_rpm: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm"
+#postgres_rpm: "https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+postgres_rpm: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+#postgres_repository_key_url: "https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG-10"
+postgres13_repository_key_url: "https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG-13"
+postgres_repository_name: pgdg13
+postgres_install_dir: /usr/pgsql-13
+postgres_install_repository: True
+
+postgres_packages:
+  - postgresql10
+  - postgresql10-devel
+  - postgresql10-odbc
+
+postgres13_packages:
+  - postgresql13.x86_64
+  - postgresql13-contrib.x86_64
+  - postgresql13-devel.x86_64
+  - postgresql13-docs.x86_64
+  - postgresql13-libs.x86_64
+  - postgresql13-llvmjit.x86_64
+  - postgresql13-odbc.x86_64
+  - postgresql13-plperl.x86_64
+  - postgresql13-plpython3.x86_64
+  - postgresql13-pltcl.x86_64
+# - postgresql13-server.x86_64
+  - postgresql13-test.x86_64
+
+postgres13_rhel_packages:
+  - rh-postgresql13.x86_64
+  - rh-postgresql13-pg_repack.x86_64
+  - rh-postgresql13-pg_repack-syspaths.x86_64
+  - rh-postgresql13-pgaudit.x86_64
+  - rh-postgresql13-postgresql.x86_64
+  - rh-postgresql13-postgresql-contrib.x86_64
+# - rh-postgresql13-postgresql-contrib-syspaths.x86_64  ## Conflicts with postgresql13-contrib.x86_64
+  - rh-postgresql13-postgresql-devel.x86_64
+  - rh-postgresql13-postgresql-docs.x86_64
+  - rh-postgresql13-postgresql-libs.x86_64
+  - rh-postgresql13-postgresql-plperl.x86_64
+  - rh-postgresql13-postgresql-plpython.x86_64
+  - rh-postgresql13-postgresql-plpython3.x86_64
+  - rh-postgresql13-postgresql-pltcl.x86_64
+# - rh-postgresql13-postgresql-server.x86_64
+# - rh-postgresql13-postgresql-server-syspaths.x86_64
+  - rh-postgresql13-postgresql-static.x86_64
+# - rh-postgresql13-postgresql-syspaths.x86_64  ## Conflicts with postgresql13-13.7-1PGDG.rhel7.x86_64
+  - rh-postgresql13-postgresql-test.x86_64
+
+postgres_gis_packages:
+  - postgis25_10
+  - postgis25_10-client
+  - postgis25_10-devel
+  - postgis25_10-utils
+  - postgis25_10-gui
+
+postgres13_gis_packages:
+  - postgis32_13
+  - postgis32_13-client
+  - postgis32_13-devel
+  - postgis32_13-docs
+  - postgis32_13-gui
+  - postgis32_13-utils
+
+postgres_old_packages:
+  - rh-postgresql96
+  - rh-postgresql96-postgresql-libs
+  - postgresql-odbc
+  - postgresql96
+  - postgresql96-libs
+  - postgresql96-odbc
+  - postgis22
+  - postgis24_96
+
+clean_postgresql: False

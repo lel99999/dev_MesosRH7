@@ -1,7 +1,13 @@
 # main.yml
 ---
 - name: Add mpapis public key
-  shell: "curl -sSL https://rvm.io/mpapis.asc | gpg --import -"
+# shell: "curl -sSL https://rvm.io/mpapis.asc | gpg --import -"
+  shell: "curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -"
+  tags:
+    - ruby
+
+- name: Add pkuczynski public key
+  shell: "curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -"
   tags:
     - ruby
 
@@ -12,28 +18,80 @@
   tags:
     - ruby
 
-- name: Get script file
-  get_url:
-    url: https://raw.githubusercontent.com/wayneeseguin/rvm/stable/binscripts/rvm-installer
-    dest: /tmp/rvm-installer.sh
-    force: yes
-  tags:
-    - ruby
+- name: Install Ruby Requirements
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc-c++
+    - patch
+    - readline
+    - readline-devel
+    - zlib
+    - zlib-devel
+    - libffi-devel
+    - openssl-devel
+    - make
+    - bzip2
+    - autoconf
+    - automake
+    - libtool
+    - bison
+    - sqlite-devel
 
-- name: Configure rvm-installer
-  file:
-    dest: /tmp/rvm-installer.sh
-    mode: 0755
-  tags:
-    - ruby
+- name: Install latest stable RVM
+# shell: "curl -L get.rvm.io | bash -s stable --ruby"
+  shell: "curl -L get.rvm.io | bash -s -- --version latest"
 
-- name: Install RVM and stable Ruby
-  command: "/tmp/rvm-installer.sh stable --ruby"
-  register: install_rvm_ruby
-  changed_when: '"Already installed" not in install_rvm_ruby.stderr or "Upgrading" in install_rvm_ruby.stdout'
-  when: install_ruby
-  tags:
-    - ruby
+- name: Load RVM environment
+  shell: source /etc/profile.d/rvm.sh
+
+- name: RVM  install Ruby 2.7
+  become: yes
+  become_method: sudo
+  shell: /usr/local/rvm/bin/rvm install 2.7
+
+- name: RVM  install Ruby 3.0
+  become: yes
+  become_method: sudo
+  shell: /usr/local/rvm/bin/rvm install 3.0
+
+- name: RVM set default 2.7.2
+  shell: /usr/local/rvm/bin/rvm alias create default 2.7.2
+
+- name: Set Ruby 2.7.x Global
+  shell: /usr/local/rvm/bin/rvm use 2.7 --default
+
+- name: Install lastest Ruby Gems
+  shell: /usr/local/rvm/bin/rvm rubygems current
+
+#- name: RVM  install Ruby 2.7
+#  become: yes
+#  become_method: sudo
+#  shell: /usr/local/rvm/bin/rvm install 2.7
+
+#- name: Get script file
+#  get_url:
+#    url: https://raw.githubusercontent.com/wayneeseguin/rvm/stable/binscripts/rvm-installer
+#    dest: /tmp/rvm-installer.sh
+#    force: yes
+#  tags:
+#    - ruby
+
+#- name: Configure rvm-installer
+#  file:
+#    dest: /tmp/rvm-installer.sh
+#    mode: 0755
+#  tags:
+#    - ruby
+
+#- name: Install RVM and stable Ruby
+#  command: "/tmp/rvm-installer.sh stable --ruby"
+#  register: install_rvm_ruby
+#  changed_when: '"Already installed" not in install_rvm_ruby.stderr or "Upgrading" in install_rvm_ruby.stdout'
+#  when: install_ruby
+#  tags:
+#    - ruby
 
 - name: Ensure /etc/rvmrc is available
   file:
@@ -91,13 +149,16 @@
     - ruby
 
 - name: Install bundler globally
-  gem:
-    name: bundler
-    state: present
-    user_install: no
-  when: install_ruby
-  tags:
-    - ruby
+  shell: bash -lc "gem install bundler"
+
+##- name: Install bundler globally
+##  gem:
+##    name: bundler
+##    state: present
+##    user_install: no
+##  when: install_ruby
+##  tags:
+##    - ruby
 
 - name: Create symlink for Bundler
   file:
