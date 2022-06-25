@@ -9,36 +9,36 @@ Vagrant.configure("2") do |config|
 ###  ### MESOS COMPONENT ###
 ###  #######################
 ###
-###  mesos_masters = [
+  mesos_masters = [
 ####   "10.0.1.31",
 ####   "10.0.1.32",
 ####   "10.0.1.33",
-###    "192.168.60.31",
-###    "192.168.60.32",
-###    "192.168.60.33",
-###  ]
-###
-###  mesos_masters.each_with_index do |ip, idx|
-###    id = idx+1
-###    config.vm.define "mesos_master_#{id}" do |mm_config|
-####     mm_config.vm.box = "bento/centos-6.10"
-###      mm_config.vm.box = "clouddood/RH7.5_baserepo"
-###      mm_config.vm.host_name = "mesos-master-#{id}.test.dev"
-###      mm_config.vm.network :private_network, ip: ip
-###
-###      mm_config.ssh.forward_agent = true
-###
-###      mm_config.vm.provision "ansible" do |ansible|
-###        ansible.playbook = "deploy_mesos_master.yml"
-###        ansible.inventory_path = "vagrant_hosts"
-###        ansible.extra_vars = {:zookeeper_id => "#{id}"}
-####       ansible.tags = ansible_tags
-####       ansible.verbose = ansible_verbosity
-####       ansible.extra_vars = ansible_extra_vars
-####       ansible.limit = ansible_limit
-###      end
-###    end
-###  end
+    "192.168.60.31",
+    "192.168.60.32",
+    "192.168.60.33",
+  ]
+
+  mesos_masters.each_with_index do |ip, idx|
+    id = idx+1
+    config.vm.define "mesos_master_#{id}" do |mm_config|
+     mm_config.vm.box = "bento/centos-6.10"
+      mm_config.vm.box = "clouddood/RH7.5_baserepo"
+      mm_config.vm.host_name = "mesos-master-#{id}.test.dev"
+      mm_config.vm.network :private_network, ip: ip
+
+      mm_config.ssh.forward_agent = true
+
+      mm_config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "deploy_mesos_master.yml"
+        ansible.inventory_path = "vagrant_hosts"
+        ansible.extra_vars = {:zookeeper_id => "#{id}"}
+       ansible.tags = ansible_tags
+       ansible.verbose = ansible_verbosity
+       ansible.extra_vars = ansible_extra_vars
+       ansible.limit = ansible_limit
+      end
+    end
+  end
 
   # Mesos Agents
   mesos_agents = [
