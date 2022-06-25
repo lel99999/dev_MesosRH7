@@ -21,8 +21,9 @@ Vagrant.configure("2") do |config|
   mesos_masters.each_with_index do |ip, idx|
     id = idx+1
     config.vm.define "mesos_master_#{id}" do |mm_config|
-     mm_config.vm.box = "bento/centos-6.10"
-      mm_config.vm.box = "clouddood/RH7.5_baserepo"
+#     mm_config.vm.box = "bento/centos-6.10"
+#     mm_config.vm.box = "clouddood/RH7.5_baserepo"
+      mm_config.vm.box = "clouddood/RH7.9_infra"
       mm_config.vm.host_name = "mesos-master-#{id}.test.dev"
       mm_config.vm.network :private_network, ip: ip
 
@@ -32,10 +33,10 @@ Vagrant.configure("2") do |config|
         ansible.playbook = "deploy_mesos_master.yml"
         ansible.inventory_path = "vagrant_hosts"
         ansible.extra_vars = {:zookeeper_id => "#{id}"}
-       ansible.tags = ansible_tags
-       ansible.verbose = ansible_verbosity
-       ansible.extra_vars = ansible_extra_vars
-       ansible.limit = ansible_limit
+#      ansible.tags = ansible_tags
+#      ansible.verbose = ansible_verbosity
+#      ansible.extra_vars = ansible_extra_vars
+#      ansible.limit = ansible_limit
       end
     end
   end
@@ -54,7 +55,8 @@ Vagrant.configure("2") do |config|
     id = idx+1
     config.vm.define "mesos_agent_#{id}" do |mm_config|
 #     mm_config.vm.box = "bento/centos-6.10"
-      mm_config.vm.box = "clouddood/RH7.5_baserepo"
+#     mm_config.vm.box = "clouddood/RH7.5_baserepo"
+      mm_config.vm.box = "clouddood/RH7.9_infra"
       mm_config.vm.host_name = "mesos-agent-#{id}.test.dev"
       mm_config.vm.network :private_network, ip: ip
 
