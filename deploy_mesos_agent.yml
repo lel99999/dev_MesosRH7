@@ -2,6 +2,8 @@
 ### The Mesos agent comes with everything included in a GoCD agent and the App Server
 ---
 - hosts: mesos_agent
+  vars:
+    - custom_repo: false
   vars_files:
      - ~/RHACCOUNT
   become: yes
@@ -51,7 +53,8 @@
     - {role: epel7, when: "use_epel"}
     - openjdk1.8
 ##  - jdk
-    - postgresql-client7
+##  - postgresql-client7
+    - postgresql13-clientRH7
     - apache
     #- pentaho
     - gocdRH7

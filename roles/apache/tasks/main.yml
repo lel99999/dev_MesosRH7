@@ -4,7 +4,8 @@
   yum:
     name: centos-release-scl
     state: present
-  when: not custom_repo
+# when: not custom_repo
+  when: custom_repo|default(true)|bool == true
   tags:
     - apache
 
