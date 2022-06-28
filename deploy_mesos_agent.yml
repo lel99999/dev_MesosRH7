@@ -63,8 +63,9 @@
 #   - {role: python-build, when: "not custom_repo"}
     - python3
     - python-libs
+    - python3RH7
     - odbc7
-    - jdbc
+    - jdbc7
     - {role: ruby, when: "install_ruby"}
     - sqitch
 ##  - r-core
