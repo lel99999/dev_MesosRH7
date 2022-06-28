@@ -98,13 +98,16 @@
     default: yes
     state: present
 
-- name: Ensure Nginx is started and enabled at boot time, if desired.
-  service:
-    name: nginx
-    state: "{{ nginx_state }}"
-    enabled: "{{ nginx_enable }}"
-  tags:
-    - nginx
+##- name: Ensure Nginx is started and enabled at boot time, if desired.
+# service:
+##  ansible.builtin.service:
+##    name: nginx
+##    state: started
+#   state: "{{ nginx_state }}"
+##    enabled: yes
+#   enabled: "{{ nginx_enable }}"
+##  tags:
+##    - nginx
 
 - name: Open port 80 in iptables
   command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport 80 -j ACCEPT"

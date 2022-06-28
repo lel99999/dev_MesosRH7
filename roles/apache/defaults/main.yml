@@ -5,7 +5,8 @@ apache_packages:
   - httpd24-httpd-devel
   - httpd24-mod_ssl
   - httpd24-mod_ldap
-  - http://cbs.centos.org/kojifiles/packages/httpd24-mod_auth_kerb/5.4/30.el6/x86_64/httpd24-mod_auth_kerb-5.4-30.el6.x86_64.rpm
+# - http://cbs.centos.org/kojifiles/packages/httpd24-mod_auth_kerb/5.4/30.el6/x86_64/httpd24-mod_auth_kerb-5.4-30.el6.x86_64.rpM
+  - http://mirror.centos.org/centos/7/sclo/x86_64/rh/Packages/h/httpd24-mod_auth_kerb-5.4-30.el7.x86_64.rpm
   - openssh
   - php
   - php-common

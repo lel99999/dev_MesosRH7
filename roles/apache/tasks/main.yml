@@ -1,13 +1,13 @@
 # main.yml - Apache installation and setup
 ---
-- name: Add Apache repo
-  yum:
-    name: centos-release-scl
-    state: present
+#- name: Add Apache repo
+# yum:
+#   name: centos-release-scl
+#   state: present
 # when: not custom_repo
-  when: custom_repo|default(true)|bool == true
-  tags:
-    - apache
+# when: custom_repo|default(true)|bool == true
+# tags:
+#   - apache
 
 - name: Install Apache
   yum:
@@ -83,6 +83,8 @@
     permissions: rX
     recursive: yes
     state: present
+# when: not custom_repo
+  when: custom_repo|default(true)|bool == true
   tags:
     - apache
 
@@ -94,5 +96,7 @@
     permissions: rX
     default: yes
     state: present
+# when: not custom_repo
+  when: custom_repo|default(true)|bool == true
   tags:
     - apache
