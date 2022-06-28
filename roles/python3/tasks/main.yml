@@ -1,5 +1,10 @@
 # main.yml - Install Python 3.4 from a repo
 ---
+- name: Ensure EPEL Latest is Installed for Python34
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: present
+
 - name: Install Python34 packages
   yum:
     name: "{{ item }}"
