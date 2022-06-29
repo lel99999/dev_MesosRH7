@@ -1,6 +1,7 @@
 ---
 
-epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm" 
+#epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm" 
+epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
 redis_user:                             redis
 redis_user_shell:                       "/bin/false"
 redis_group:                            "{{ redis_user }}"
@@ -10,6 +11,7 @@ redis_db_dir:                           /var/lib/redis
 redis_dbfilename:                       dump.rdb
 redis_config_directory:                 /etc/redis
 
+iptables_chain: 			test
 
 redis_config_file:                      /etc/redis.conf
 

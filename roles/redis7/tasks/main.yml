@@ -52,8 +52,16 @@
   tags:
     - redis
 
+- name: Create IPTables Chain (if one doesn't exist)
+# command: "iptables -N {{ iptables_chain }}"
+  ansible.builtin.iptables:
+    chain: "{{ iptables_chain }}"
+#   chain_management: true
+    state: present
+
 - name: Open port 6379 in iptables
-  command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
+  command: "iptables -I {{ iptables_chain }} 1 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
+# command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
   when: iptables_config and deploy_iptables
   tags:
     - redis
