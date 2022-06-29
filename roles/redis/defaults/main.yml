@@ -1,6 +1,7 @@
 ---
 
-epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm" 
+#epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm" 
+epel_repo_url:                          "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm" 
 redis_user:                             redis
 redis_user_shell:                       "/bin/false"
 redis_group:                            "{{ redis_user }}"
@@ -20,7 +21,9 @@ redis_working_directory:                /var/redis/{{ redis_port }}
 redis_logfile:                          /var/log/redis_{{ redis_port }}.log
 
 redis_daemonize:                        "yes"
-redis_version:                          2.0.
+# NOTE: Redis v5 available for RHEL 7 -> https://developers.redhat.com/blog/2019/06/21/redis-5-now-available-on-red-hat-enterprise-linux-7/
+#redis_version:                          2.0.
+redis_version:                          5.0.
 redis_bind_address:                     "127.0.0.1"
 redis_port:                             6379
 redis_timeout:                          300

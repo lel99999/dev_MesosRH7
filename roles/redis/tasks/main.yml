@@ -11,7 +11,9 @@
   tags:
     - redis
 
-- name: Install the Redis package
+- name: Install the Redis package  ### from EPEL
+  become: yes
+  become_method: sudo
   yum:
    name: redis
    state: present
@@ -53,7 +55,8 @@
     - redis
 
 - name: Open port 6379 in iptables
-  command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
+  command: "iptables -I {{ iptables_chain }} -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
+# command: "iptables -I {{ iptables_chain }} 3 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
   when: iptables_config and deploy_iptables
   tags:
     - redis
