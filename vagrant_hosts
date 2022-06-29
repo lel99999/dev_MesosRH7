@@ -1,5 +1,8 @@
 [research_environment]
 mesosRH7 ansible_host=192.168.60.167
+[mesos_test]
+#basesystem ansible_ssh_host=192.168.60.30
+roletester ansible_ssh_host=192.168.60.30
 
 [mesos_master]
 #mesos_master_1 ansible_ssh_host=10.0.1.31 zookeeper_id=1
@@ -20,3 +23,4 @@ mesos_agent_3 ansible_ssh_host=192.168.60.36
 [mesos:children]
 mesos_master
 mesos_agent
+mesos_test
