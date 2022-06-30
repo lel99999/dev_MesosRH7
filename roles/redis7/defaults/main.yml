@@ -11,7 +11,7 @@ redis_db_dir:                           /var/lib/redis
 redis_dbfilename:                       dump.rdb
 redis_config_directory:                 /etc/redis
 
-iptables_chain: 			test
+iptables_chain: 			TEST-INPUT
 
 redis_config_file:                      /etc/redis.conf
 

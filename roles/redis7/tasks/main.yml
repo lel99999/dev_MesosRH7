@@ -16,6 +16,9 @@
    name: redis
    state: present
    disable_gpg_check: yes
+  with_items:
+    - redis
+    - rh-redis5
   tags:
     - redis
 
@@ -52,12 +55,43 @@
   tags:
     - redis
 
+- name: Check if Chain exists
+  shell: iptables -L | grep {{ item }}
+# shell: iptables -L | grep $item 
+  with_items:
+    - "{{ iptables_chain }}"   
+  #grep will exit with 1 when no results found
+  register: ipt_chains
+  ignore_errors: true
+  become: yes
+  become_method: sudo
+
+- debug: msg={{ ipt_chains }}
+
+- debug: 
+    msg: " Values {{ item.rc }} has keys {{ item.key.keys() }}"
+  with_items: "{{ ipt_chains.results }}"
+
 - name: Create IPTables Chain (if one doesn't exist)
+  command: "{{ item }}"
+  with_items:
+    - "iptables -F {{ iptables_chain }}"
+    - "iptables -X {{ iptables_chain }}"
+# when: "{{ iptables_chain }} in {{ ipt_chains }}"
+  when: ipt_chains[rc] != 1
+
+- name: Create IPTables Chain 
+  command: "{{ item }}"
+  with_items:
+    - "iptables -N {{ iptables_chain }}"
 # command: "iptables -N {{ iptables_chain }}"
-  ansible.builtin.iptables:
-    chain: "{{ iptables_chain }}"
+#  ansible.builtin.iptables:
+#   chain: "{{ iptables_chain }}"
 #   chain_management: true
-    state: present
+#   state: present
+# when: iptables_config and deploy_iptables
+  become: yes
+  become_method: sudo
 
 - name: Open port 6379 in iptables
   command: "iptables -I {{ iptables_chain }} 1 -m state --state NEW -p tcp --dport {{ redis_port }} -j ACCEPT"
@@ -68,7 +102,8 @@
 
 - name: Ensure redis is running
   service:
-   name: "{{ redis_service }}"
+#  name: "{{ redis_service }}"
+   name: rh-redis5-redis
    state: started
    enabled: yes
   when: not custom_repo # Redis doesn't have an init file when using our RPM
