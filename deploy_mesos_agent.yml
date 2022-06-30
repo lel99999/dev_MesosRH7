@@ -72,7 +72,7 @@
 ##  - r-libs
 ### - r-shiny
     - nodejs
-    - redis
+    - redis7
 #   - julia
 
   post_tasks:
