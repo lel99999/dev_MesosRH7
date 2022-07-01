@@ -56,8 +56,8 @@
     - redis
 
 - name: Check if Chain exists
-  command: iptables -L | grep -q {{ item }}
-# shell: iptables -L | grep {{ item }}
+# command: iptables -L | grep -q {{ item }}
+  shell: iptables -L | grep {{ item }}
 # shell: iptables -L | grep $item 
   with_items:
     - "{{ iptables_chain }}"   
@@ -75,7 +75,7 @@
 
 #- debug: msg={{ ipt_chains }}
 - debug:
-    msg: "{{ ipt_chains.stdout }}"
+    msg: "{{ ipt_chains.results[0].rc }}"
 # with_items: "{{ iptables_chains.results | json_query('[].keys.keys(@)') }}"
 
 #- debug: 
@@ -88,7 +88,7 @@
     - "iptables -F {{ iptables_chain }}"
     - "iptables -X {{ iptables_chain }}"
 # when: "{{ iptables_chain }} in {{ ipt_chains }}"
-  when: ipt_chains.rc != 1
+  when: ipt_chains.results[0].rc | default('') != 1
 
 - name: Create IPTables Chain 
   command: "{{ item }}"
