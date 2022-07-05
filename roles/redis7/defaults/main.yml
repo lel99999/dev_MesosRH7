@@ -22,7 +22,8 @@ redis_working_directory:                /var/redis/{{ redis_port }}
 redis_logfile:                          /var/log/redis_{{ redis_port }}.log
 
 redis_daemonize:                        "yes"
-redis_version:                          2.0.
+#redis_version:                          2.0.
+redis_version:                          7.0.
 redis_bind_address:                     "127.0.0.1"
 redis_port:                             6379
 redis_timeout:                          300

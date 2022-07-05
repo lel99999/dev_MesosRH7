@@ -11,16 +11,56 @@
   tags:
     - redis
 
-- name: Install the Redis package
+##- name: Install the Redis package
+##  yum:
+##   name: redis
+##   state: present
+##   disable_gpg_check: yes
+##  with_items:
+##    - redis
+##    - rh-redis5
+##  tags:
+##    - redis
+
+##- name: Download Redis 6.x
+##  shell: wget -O /tmp/redis-6.2.6.tar.gz https://download.redis.io/releases/redis-6.2.6.tar.gz 
+### shell: wget -O /tmp/redis-server-6.2.2-v5.rhel7.x86_64.tar.gz https://packages.redis.io/redis-stack/redis-stack-server-6.2.2-v5.rhel7.x86_64.tar.gz
+##  become: yes
+##  become_method: sudo
+##
+##- name: Unzip and Install Redis
+##  unarchive:
+##    src:  /tmp/redis-6.2.6.tar.gz
+##    dest: /tmp
+##    remote_src: yes
+##  become: yes
+##  become_method: sudo
+##
+##- name: Make && Make Install Redis
+##  shell: "{{ item }}"
+##  args:
+##    chdir: /tmp/redis-6.2.6
+##  with_items:
+##    - make
+##    - make install
+##  become: yes
+##  become_method: sudo
+##  register: buildredis
+##
+##- debug:
+##    msg: "{{ buildredis }}"
+
+- name: Add redis repository
+  yum_repository:
+    name: remi
+    description: "Remi Repo"
+    baseurl: "http://rpms.remirepo.net/enterprise"
+    gpgcheck: no
+
+- name: Install remi redis 7.x
   yum:
-   name: redis
-   state: present
-   disable_gpg_check: yes
-  with_items:
-    - redis
-    - rh-redis5
-  tags:
-    - redis
+    name: redis
+    state: latest
 
 - name: Make Configuration directory
   file:
@@ -110,12 +150,19 @@
   tags:
     - redis
 
+###- name: Ensure redis is running
+###  service:
+####  name: "{{ redis_service }}"
+###   name: rh-redis5-redis
+###   state: started
+###   enabled: yes
+###  when: not custom_repo # Redis doesn't have an init file when using our RPM
+###  tags:
+###    - redis
+
 - name: Ensure redis is running
-  service:
-#  name: "{{ redis_service }}"
-   name: rh-redis5-redis
-   state: started
-   enabled: yes
-  when: not custom_repo # Redis doesn't have an init file when using our RPM
-  tags:
-    - redis
+  shell: systemctl start redis
+  register: redis_svc
+
+- debug:
+    msg: "{{ redis_svc }}"
