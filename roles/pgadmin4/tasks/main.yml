@@ -1,0 +1,67 @@
+---
+#Required for computer to make an ssl connection for postgres (since they sign their cert with letsencrypt)
+- name: Install cert utilities
+  yum: 
+    name: ca-certificates
+    state: latest
+  become: yes
+  become_method: sudo
+
+- name: Add pgAdmin4 repository
+  yum: 
+    name: https://ftp.postgresql.org/pub/pgadmin/pgadmin4/yum/pgadmin4-redhat-repo-2-1.noarch.rpm
+    state: present
+    validate_certs: no
+  become: yes
+  become_method: sudo
+
+- name: Install pgAdmin4
+  yum: 
+    name: pgadmin4
+    state: latest
+  become: yes
+  become_method: sudo
+
+- name: Enable and Start httpd
+  shell: "{{ item }}"
+  with_items:
+    - systemctl start httpd
+    - systemctl enable httpd
+  become: yes
+  become_method: sudo
+
+- name: Configure Firewall Rules
+  shell: "{{ item }}"
+  with_items:
+    - firewall-cmd --permanent --add-service=http
+    - firewall-cmd --reload
+  become: yes
+  become_method: sudo
+
+##  - name: Get JDBC driver JAR file for postgresql
+##    get_url:
+##      url: "{{ jdbc_postgres_url }}"
+##      dest: "{{ jre_lib_path }}/"
+##      mode: 0644
+##  
+##  - name: Get the JDBC driver for SQLServer
+##    unarchive:
+##      src: "{{ jdbc_sql_url }}"
+##      dest: "/tmp/"
+##      copy: no
+##  
+##  - name: Move the JRE8 JAR file to the right location
+##    copy:
+##  #   src: "/tmp/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"
+##      src: "/tmp/sqljdbc_7.2/enu/mssql-jdbc-7.2.2.jre8.jar"
+##      dest: "{{ jre_lib_path }}"
+##      remote_src: yes
+##      mode: 0644
+##  
+##  - name: Move the JRE11 JAR file to the right location
+##    copy:
+##  #   src: "/tmp/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"
+##      src: "/tmp/sqljdbc_7.2/enu/mssql-jdbc-7.2.2.jre11.jar"
+##      dest: "{{ jre_lib_path }}"
+##      remote_src: yes
+##      mode: 0644
